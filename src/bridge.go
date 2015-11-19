@@ -12,16 +12,16 @@ func proxy(local net.Conn, target string){
     if (err == nil) {
         go func() {
             _, err := io.Copy(local, remote)
-            log.Printf("remote connection closed")
+            log.Println("remote connection closed")
             local.Close()
             if err != nil {
-                log.Printf("error is: %v", err)
+                log.Println("error is: %v", err)
             }
             defer remote.Close()
         }()
         go func() {
             _, err := io.Copy(remote, local)
-            log.Printf("incoming connection closed")
+            log.Println("incoming connection closed")
             if err != nil {
                 log.Printf("error is: %v", err)
             }
@@ -43,6 +43,9 @@ func getRemote(target string) (net.Conn, error) {
 
 func main() {
 
+    log.Println("--------------------------------")
+    log.Println("the bridge - (c) 2015 RpG")
+    log.Println("--------------------------------")
     if (len(os.Args[1:]) < 2) {
         log.Fatal("local:port and remote:port are required arguments")
         return
