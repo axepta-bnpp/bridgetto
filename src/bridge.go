@@ -45,7 +45,7 @@ func getRemote(target string) (net.Conn, error) {
 func main() {
 
     log.Println("--------------------------------")
-    log.Println("the bridge - (c) 2015 RpG")
+    log.Println("smallbridge - (c) 2015 RpG")
     log.Println("--------------------------------")
     if (len(os.Args[1:]) < 2) {
         log.Fatal("local:port and remote:port are required arguments")

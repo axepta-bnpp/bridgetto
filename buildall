@@ -1,10 +1,10 @@
 echo
-echo Building the bridge
+echo Building smallbridge
 echo ------------------------------------
 echo building macosx
-go build -o dist/amd64/macosx/bridge src/bridge.go
+go build -o dist/amd64/macosx/smallbridge src/bridge.go
 echo building windows
-GOOS=windows go build -o dist/amd64/windows/bridge.exe src/bridge.go
+GOOS=windows go build -o dist/amd64/windows/smallbridge.exe src/bridge.go
 echo building linux
-GOOS=linux go build -o dist/amd64/linux/bridge src/bridge.go
+GOOS=linux go build -o dist/amd64/linux/smallbridge src/bridge.go
 echo
