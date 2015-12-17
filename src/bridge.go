@@ -22,6 +22,7 @@ func proxy(local net.Conn, target string){
         go func() {
             _, err := io.Copy(remote, local)
             log.Println("incoming connection closed")
+            local.Close()
             if err != nil {
                 log.Printf("error is: %v", err)
             }
