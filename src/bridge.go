@@ -14,19 +14,21 @@ func proxy(local net.Conn, target string){
             _, err := io.Copy(local, remote)
             log.Println("remote connection closed")
             local.Close()
+            remote.Close()
             if err != nil {
-                log.Println("error is: %v", err)
+//                log.Println("remote error is:", err)
             }
-            defer remote.Close()
+            //defer remote.Close()
         }()
         go func() {
             _, err := io.Copy(remote, local)
             log.Println("incoming connection closed")
             local.Close()
+            remote.Close()
             if err != nil {
-                log.Printf("error is: %v", err)
+//                log.Printf("incoming error is:", err)
             }
-            defer remote.Close()
+            //defer remote.Close()
         }()
     }
 }
