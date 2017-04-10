@@ -7,8 +7,8 @@ import (
     "os"
 )
 
-func proxy(local net.Conn, target string){
-    remote, err := getRemote(target)
+func proxy(local net.Conn, targetProtocol string, target string){
+    remote, err := getRemote(targetProtocol, target)
     if (err == nil) {
         go func() {
             _, err := io.Copy(local, remote)
@@ -33,8 +33,8 @@ func proxy(local net.Conn, target string){
     }
 }
 
-func getRemote(target string) (net.Conn, error) {
-    remote, err := net.Dial("tcp", target)
+func getRemote(targetProtocol string, target string) (net.Conn, error) {
+    remote, err := net.Dial(targetProtocol, target)
     log.Println("Connecting remote", target, "wait...")
     if err != nil {
         log.Printf("Unable to connect - %s", err)
@@ -50,14 +50,24 @@ func main() {
     log.Println("smallbridge - (c) 2015 RpG")
     log.Println("--------------------------------")
     if (len(os.Args[1:]) < 2) {
-        log.Fatal("local:port and remote:port are required arguments")
+        log.Fatal("local:port and remote:port (or unix:/path/to/filename) are required arguments")
         return
     }
-
+    
     listenOn := os.Args[1]
+    localProtocol := "tcp"
     target := os.Args[2]
-
-    server, err := net.Listen("tcp", listenOn)
+    targetProtocol := "tcp"
+    if (target[:5] == "unix:") {
+        targetProtocol = "unix"
+        target = target[5:]
+    } else if(target[:4] == "tcp:") {
+        targetProtocol = "tcp"
+        target = target[4:]
+    }
+    log.Println("bridge targeting:", targetProtocol, target)
+    
+    server, err := net.Listen(localProtocol, listenOn)
     if err != nil {
 		log.Fatalf("Port/Address busy - %s", err)
 	}
@@ -70,6 +80,6 @@ func main() {
             log.Fatalf("listen Accept failed - %s", err)
         }
         log.Println("incoming connection accepted from:", local.RemoteAddr())
-        proxy(local, target)
+        proxy(local, targetProtocol, target)
     }
 }
